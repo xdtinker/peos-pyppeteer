@@ -19,7 +19,7 @@ def notification(msg):
     return notify
 
 async def main():
-    browser = await launch(headless=False, args=['--ignore-certificate-errors', '--no-sandbox'], 
+    browser = await launch(headless=True, args=['--ignore-certificate-errors', '--no-sandbox'], 
                             handleSIGINT=False,
                             handleSIGTERM=False,
                             handleSIGHUP=False)
