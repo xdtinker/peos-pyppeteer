@@ -39,13 +39,13 @@ async def main():
         try:
             current_url = page.url
             if(current_url != key.SITE + 'hhw.php'):
-                notification('Account not found!')
+                notification('Account not found! Use /retry to try again.')
             else:
-                notification('Account Verified!\nSetting up..')
+                notification('Account Verified!')
         except Exception as e:
-            print(e)
-            await browser.close()
-            
+            pass
+
+        notification('Exam in progress')
         moduleNum = 0
         while True:
             try:
