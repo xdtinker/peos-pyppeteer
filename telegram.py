@@ -10,10 +10,9 @@ bot.add_custom_filter(custom_filters.ChatFilter())
 
 commands = """
 These are the available commands
-/start - greetings
+/start - run bot process
 /help - get help
-/visa - check for visa expiration
-/med - check medical expiration
+/ping - check if bot is working
 """
 
 @bot.message_handler(commands=['cmd'])
@@ -24,15 +23,15 @@ def cmd(message):
 def greet(message):
   bot.send_message(message.chat.id, "I'm alive!")
 
-@bot.message_handler(commands=['start', 'retry'])
-def guest(message):
-    bot.send_message(message.chat.id, "You are not allowed to use this command, Administration rights required.")
-
 @bot.message_handler(chat_id=[879252455], commands=['start', 'retry'])
 def start(message):
     bot.send_message(message.chat.id, "What's your E-Registration number?")
     bot.register_next_step_handler(message, getLastname)
-    
+
+@bot.message_handler(commands=['start', 'retry'])
+def guest(message):
+    bot.send_message(message.chat.id, "You are not allowed to use this command, Administration rights required.")
+
 def getLastname(message):
     try:
         pdata.eNumber = int(message.text)
