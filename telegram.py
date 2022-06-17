@@ -8,9 +8,25 @@ API_TOKEN = '5560316134:AAEHvQhnGireamMnJzDNA-vqLbU5OW5H2aw'
 bot = telebot.TeleBot(API_TOKEN)
 bot.add_custom_filter(custom_filters.ChatFilter())
 
+commands = """
+These are the available commands
+/start - greetings
+/help - get help
+/visa - check for visa expiration
+/med - check medical expiration
+"""
+
+@bot.message_handler(commands=['cmd'])
+def cmd(message):
+    bot.send_message(message.chat.id, commands)
+
 @bot.message_handler(commands=['ping'])
 def greet(message):
   bot.send_message(message.chat.id, "I'm alive!")
+
+@bot.message_handler(commands=['start', 'retry'])
+def guest(message):
+    bot.send_message(message.chat.id, "You are not allowed to use this command, Administration rights required.")
 
 @bot.message_handler(chat_id=[879252455], commands=['start', 'retry'])
 def start(message):
@@ -36,7 +52,7 @@ def run(message):
     pdata.firstname=message.text
     bot.send_message(message.chat.id, "OK, please wait for a moment...")
     runme()
-    
+
 bot.enable_save_next_step_handlers(delay=1)
 bot.load_next_step_handlers()
 

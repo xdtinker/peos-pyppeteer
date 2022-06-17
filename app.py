@@ -19,7 +19,7 @@ def notification(msg):
     return notify
 
 async def main():
-    browser = await launch(headless=True, args=['--ignore-certificate-errors', '--no-sandbox'], 
+    browser = await launch(headless=False, args=['--ignore-certificate-errors', '--no-sandbox'], 
                             handleSIGINT=False,
                             handleSIGTERM=False,
                             handleSIGHUP=False)
@@ -34,11 +34,17 @@ async def main():
 
         await page.click('#hhw')
         await page.click('button[name="peos"]')
-
-        await page.waitFor(3000)
-        current_url = page.url
-        if(current_url != key.SITE + 'hhw.php'):print('Account not found!')
-        else:print('Login Success!')
+    
+        await page.waitFor(1500)
+        try:
+            current_url = page.url
+            if(current_url != key.SITE + 'hhw.php'):
+                notification('Account not found!')
+            else:
+                notification('Account Verified!\nSetting up..')
+        except Exception as e:
+            print(e)
+            await browser.close()
             
         moduleNum = 0
         while True:
@@ -48,7 +54,7 @@ async def main():
                 await page.click(f'a[href="{moduleNum}"]')
                 await page.waitFor(1000)
                 await page.click('.getQuestionsHHW')
-                await page.waitFor(2000)
+                await page.waitFor(1000)
                 for idx in range(5):
                     choice = await page.querySelectorAll(f'#inlineRadio{random.randint(1,2)}')
                     await choice[idx].click()
@@ -80,6 +86,7 @@ async def main():
         print('CertID:',_CertID)
         await browser.close()
     except Exception as e:
+        notification('Something went wrong. Use /retry to try again.')
         print(e)
         await browser.close()
 
