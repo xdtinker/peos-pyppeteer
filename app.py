@@ -39,7 +39,7 @@ async def main():
             await page.waitFor(1500)
             current_url = page.url
             if(current_url != key.SITE + 'hhw.php'):
-                notification('Account not found!')
+                notification('Account not found! Use /retry to try again.')  
             else:
                 notification('Account Verified!')
                 await page.waitFor(1200)
