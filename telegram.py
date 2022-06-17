@@ -49,7 +49,7 @@ def getFirstname(message):
 
 def run(message):
     pdata.firstname=message.text
-    bot.send_message(message.chat.id, "OK, please wait for a moment...")
+    bot.send_message(message.chat.id, "Verifying account infromation")
     runme()
 
 bot.enable_save_next_step_handlers(delay=1)
