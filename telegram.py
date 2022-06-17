@@ -1,13 +1,18 @@
 import telebot
+from telebot import custom_filters
 from app import pdata
 from app import runme
 
 API_TOKEN = '5560316134:AAEHvQhnGireamMnJzDNA-vqLbU5OW5H2aw'
 
 bot = telebot.TeleBot(API_TOKEN)
+bot.add_custom_filter(custom_filters.ChatFilter())
 
+@bot.message_handler(commands=['ping'])
+def greet(message):
+  bot.send_message(message.chat.id, "I'm alive!")
 
-@bot.message_handler(commands=['start', 'retry'])
+@bot.message_handler(chat_id=[879252455], commands=['start', 'retry'])
 def start(message):
     bot.send_message(message.chat.id, "What's your E-Registration number?")
     bot.register_next_step_handler(message, getLastname)
@@ -22,7 +27,6 @@ def getLastname(message):
     except Exception as e:
         print('error', e.with_traceback)
 
-
 def getFirstname(message):
     pdata.lasttname=message.text
     bot.send_message(message.chat.id, "What's your first name?") 
@@ -32,8 +36,8 @@ def run(message):
     pdata.firstname=message.text
     bot.send_message(message.chat.id, "OK, please wait for a moment...")
     runme()
+    
 bot.enable_save_next_step_handlers(delay=1)
-
 bot.load_next_step_handlers()
 
 bot.infinity_polling(skip_pending=True)
