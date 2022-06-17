@@ -35,17 +35,19 @@ async def main():
         await page.click('#hhw')
         await page.click('button[name="peos"]')
     
-        await page.waitFor(1500)
         try:
+            await page.waitFor(1500)
             current_url = page.url
             if(current_url != key.SITE + 'hhw.php'):
-                notification('Account not found! Use /retry to try again.')
+                notification('Account not found!')
             else:
                 notification('Account Verified!')
+                await page.waitFor(1200)
+                notification('Exam in progress')
         except Exception as e:
-            pass
-
-        notification('Exam in progress')
+            print('err')
+            await browser.close()
+        
         moduleNum = 0
         while True:
             try:
@@ -63,14 +65,14 @@ async def main():
                 await page.waitFor(1000)
                 if(await page.xpath('//a[contains(text(), "Let\'s review again!")]')):
                     #print(f'> Module {moduleNum} Status: X FAILED',end='\r')
-                    # await page.click(f'a[href="{moduleNum}"]')
+                    #await page.click(f'a[href="{moduleNum}"]')
                     moduleNum-=1
                 else: 
-                    #print(f'> Module {moduleNum} Status: ✓ PASSED')
+                    print(f'> Module {moduleNum} Status: ✓ PASSED')
                     notification(f'█ Module {moduleNum} Status: ✓ PASSED')
             except Exception as e:
                 moduleNum-=1
-                # print(e)
+                print(e)
         await page.waitFor(1000)        
         await page.click(f'a[href="8"]')
         while True:
@@ -82,8 +84,8 @@ async def main():
             else:
                break 
         notification(f'Name: {str(_Name).upper()}\nCertID: {_CertID}')
-        #print('Name:',str(_Name).upper())
-        #print('CertID:',_CertID)
+        print('Name:',str(_Name).upper())
+        print('CertID:',_CertID)
         await browser.close()
     except Exception as e:
         notification('Something went wrong. Use /retry to try again.')
