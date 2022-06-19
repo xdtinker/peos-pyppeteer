@@ -16,7 +16,7 @@ These are the available commands
 /ping - check if bot is working
 """
 
-@app.route("/", methods=["POST", "GET"])
+@app.route("/")
 def req():
     if request.method == "POST":
         flash('THIS IS MESSAGE')
