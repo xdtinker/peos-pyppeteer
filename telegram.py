@@ -1,6 +1,4 @@
 import telebot
-import os
-from flask import Flask, render_template, request
 from telebot import custom_filters
 from app import pdata
 from app import runme
@@ -8,7 +6,6 @@ from app import runme
 API_TOKEN = '5560316134:AAEHvQhnGireamMnJzDNA-vqLbU5OW5H2aw'
 
 bot = telebot.TeleBot(API_TOKEN)
-app = Flask(__name__)
 
 bot.add_custom_filter(custom_filters.ChatFilter())
 
@@ -18,13 +15,6 @@ These are the available commands
 /help - get help
 /ping - check if bot is working
 """
-
-@app.route('/', methods=['GET', 'POST'])
-def webhook():
-    if request.method == 'POST':
-        return 'OK'
-    return 'ERR'
-
 
 @bot.message_handler(commands=['cmd'])
 def cmd(message):

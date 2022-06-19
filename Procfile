@@ -1,1 +1,1 @@
-web: gunicorn telegram:app
+worker: python telegram.py
