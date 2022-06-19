@@ -2,12 +2,11 @@ import telebot
 from telebot import custom_filters
 from app import pdata
 from app import runme
-from flask import Flask, flash, render_template, request
 API_TOKEN = '5560316134:AAEHvQhnGireamMnJzDNA-vqLbU5OW5H2aw'
 
 bot = telebot.TeleBot(API_TOKEN)
-app = Flask(__name__)
 bot.add_custom_filter(custom_filters.ChatFilter())
+
 
 commands = """
 These are the available commands
@@ -15,13 +14,6 @@ These are the available commands
 /help - get help
 /ping - check if bot is working
 """
-
-@app.route("/")
-def req():
-    if request.method == "POST":
-        flash('THIS IS MESSAGE')
-        return "OK"
-    else: return "ERR"
     
 @bot.message_handler(commands=['cmd'])
 def cmd(message):
@@ -29,7 +21,7 @@ def cmd(message):
 
 @bot.message_handler(commands=['ping'])
 def greet(message):
-  bot.send_message(message.chat.id, "I'm alive!")
+    bot.send_message(message.chat.id, "I'm alive!")
 
 @bot.message_handler(chat_id=[879252455], commands=['start', 'retry'])
 def start(message):
