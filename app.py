@@ -58,6 +58,7 @@ async def main():
                     
                     await page.waitFor(1000)
                     if(await page.xpath('//a[contains(text(), "Let\'s review again!")]')):
+                        print(f'> Module {moduleNum} Status: X FAILED')
                         moduleNum-=1
                     else: 
                         print(f'> Module {moduleNum} Status: ✓ PASSED')
