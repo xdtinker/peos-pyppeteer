@@ -32,7 +32,7 @@ Frequently Asked Questions
 
 - You may have provided Incorrect Info(Typo). If you think all your inputs are correct you may use /retry command to try again otherwise contact the developer.
 
-3. I'm Stucked in Module ?: PASSED. why?
+3. I'm stuck in Module {module number}, why?
 
 - Please be patient as Bot is trying It's best to pass the exam. however if you've been stuck for 5-10 minutes. You may try again or Contact the developer. 
 
