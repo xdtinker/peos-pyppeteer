@@ -1,6 +1,5 @@
 import telebot
 from telebot import types
-from telebot import custom_filters
 from functools import wraps
 from app import pdata
 from app import runme
@@ -9,7 +8,6 @@ from app import runme
 API_TOKEN = '5560316134:AAEHvQhnGireamMnJzDNA-vqLbU5OW5H2aw'
 
 bot = telebot.TeleBot(API_TOKEN)
-bot.add_custom_filter(custom_filters.ChatFilter())
 
 
 commands = """
@@ -28,20 +26,22 @@ Frequently Asked Questions
 
 - This bot is for private use only, unknown user/s are blocked from accessing the bot.
 
-2. After I provide the information(Ereg and name) it says 'Account not found', why?
+2. How do I get access?
+
+- Contact the developer and ask for permission.
+
+3. After I provide the information(Ereg and name) it says 'Account not found', why?
 
 - You may have provided Incorrect Info(Typo). If you think all your inputs are correct you may use /retry command to try again otherwise contact the developer.
 
-3. I'm stuck in Module {module number}, why?
+4. I'm stuck in Module {module number}, why?
 
 - Please be patient as Bot is trying It's best to pass the exam. however if you've been stuck for 5-10 minutes. You may try again or Contact the developer. 
 
 @esperanzax
 """
 
-
-from functools import wraps
-
+temp_user = []
 
 def is_known_username(username):
     '''
@@ -49,7 +49,7 @@ def is_known_username(username):
     '''
     known_usernames = ['esperanzax']
 
-    return username in known_usernames
+    return username in known_usernames + temp_user
 
 
 def private_access():
@@ -70,6 +70,18 @@ def private_access():
         return f_restrict  # true decorator
 
     return deco_restrict
+
+@bot.message_handler(commands=['add'])
+@private_access()
+def add_user(message):
+    bot.send_message(message.chat.id, 'Who would you like to grant privilege')
+    bot.register_next_step_handler(message, user)
+
+def user(message):
+    _user = message.text
+    temp_user.append(str(_user))
+    bot.send_message(message.chat.id, 'User {} added.'.format(_user))
+    print(temp_user)
     
 @bot.message_handler(commands=['start'])
 def welcome(message):
