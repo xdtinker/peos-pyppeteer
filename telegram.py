@@ -42,14 +42,15 @@ Frequently Asked Questions
 """
 
 temp_user = []
+_admin = ['esperanzax']
 
-def is_known_username(username):
+def isAdmin(username):
     '''
     Returns a boolean if the username is known in the user-list.
     '''
-    known_usernames = ['esperanzax']
+    admin = ['esperanzax'] + temp_user
 
-    return username in known_usernames + temp_user
+    return username in admin
 
 
 def private_access():
@@ -62,27 +63,29 @@ def private_access():
         def f_restrict(message, *args, **kwargs):
             username = message.from_user.username
 
-            if is_known_username(username):
+            if isAdmin(username):
                 return f(message, *args, **kwargs)
             else:
                 bot.reply_to(message, text="You are not allowed to use this command.")
 
-        return f_restrict  # true decorator
+        return f_restrict  # true decorator+
 
     return deco_restrict
 
 @bot.message_handler(commands=['add'])
-@private_access()
 def add_user(message):
-    bot.send_message(message.chat.id, 'Who would you like to grant privilege')
-    bot.register_next_step_handler(message, user)
-
+    username = message.from_user.username
+    if username not in temp_user and username not in _admin or username in temp_user:
+        bot.reply_to(message, text="You are not allowed to use this command.")
+    else:
+        bot.send_message(message.chat.id, 'Who would you like to grant privilege?')
+        bot.register_next_step_handler(message, user)
+        
 def user(message):
     _user = message.text
     temp_user.append(str(_user))
     bot.send_message(message.chat.id, 'User {} added.'.format(_user))
     print(temp_user)
-    
 @bot.message_handler(commands=['start'])
 def welcome(message):
     username = message.chat.first_name
