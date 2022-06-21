@@ -44,6 +44,8 @@ Frequently Asked Questions
 temp_user = []
 _admin = ['esperanzax']
 
+
+
 def isAdmin(username):
     '''
     Returns a boolean if the username is known in the user-list.
@@ -72,6 +74,38 @@ def private_access():
 
     return deco_restrict
 
+@bot.message_handler(commands=['members'])
+def members(message):
+    _user = message.from_user.username
+    if _user not in temp_user and _user not in _admin or _user in temp_user:
+        bot.reply_to(message, text="You are not allowed to use this command.")
+    else:
+        if temp_user == []:
+            bot.send_message(message.chat.id, 'No registered members')
+        else:
+            _members = 'Registered members\n\n' + '\n'.join([member for member in temp_user])
+            bot.send_message(message.chat.id, _members)
+
+@bot.message_handler(commands=['remove'])
+def members(message):
+    _user = message.from_user.username
+    if _user not in temp_user and _user not in _admin or _user in temp_user:
+        bot.reply_to(message, text="You are not allowed to use this command.")
+    else:
+        if temp_user == []:
+            bot.send_message(message.chat.id, 'No member/s to remove')
+        else:
+            bot.send_message(message.chat.id, 'OK, Send me the username you want to remove')
+            bot.register_next_step_handler(message, remove_user)
+
+def remove_user(message):
+    _user = message.text
+    if _user in temp_user:
+        temp_user.remove(_user)
+        bot.send_message(message.chat.id, 'User {} has been removed.'.format(_user))
+    else:
+        bot.send_message(message.chat.id, 'User {} not found.'.format(_user))
+
 @bot.message_handler(commands=['add'])
 def add_user(message):
     username = message.from_user.username
@@ -85,7 +119,7 @@ def user(message):
     _user = message.text
     temp_user.append(str(_user))
     bot.send_message(message.chat.id, 'User {} added.'.format(_user))
-    print(temp_user)
+    
 @bot.message_handler(commands=['start'])
 def welcome(message):
     username = message.chat.first_name
