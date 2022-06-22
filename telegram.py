@@ -5,11 +5,9 @@ from functools import wraps
 from app import pdata
 from app import runme
 
-#temporary approach
-
 API_TOKEN = os.environ['API_KEY']
 
-bot = telebot.TeleBot(API_TOKEN,parse_mode=None)
+bot = telebot.TeleBot(API_TOKEN, parse_mode=None)
 
 commands = """
 These are the available commands
@@ -174,8 +172,9 @@ def run(message):
         bot.reply_to(message, "Bot is currently occupied.. you can try again in 2-5 minutes.")
     else:
         pdata.is_occupied = True
-        chatId(message.chat.id)
-        bot.reply_to(message, "Verifying account information")
+        userID = message.chat.id
+        chatId(userID)
+        bot.send_message(userID, "Verifying account information")
         runme()
 @bot.message_handler(commands=['faq'])
 def cmd(message):
