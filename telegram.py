@@ -1,14 +1,14 @@
 import telebot
+import os
 from telebot import types
 from functools import wraps
 from app import pdata
 from app import runme
 
 
-API_TOKEN = '5560316134:AAEHvQhnGireamMnJzDNA-vqLbU5OW5H2aw'
+API_TOKEN = os.environ['API_KEY']
 
-bot = telebot.TeleBot(API_TOKEN)
-
+bot = telebot.TeleBot(API_TOKEN,parse_mode=None)
 
 commands = """
 These are the available commands
@@ -44,7 +44,15 @@ Frequently Asked Questions
 temp_user = []
 _admin = ['esperanzax']
 
+def isOccupied():
+    if pdata.is_occupied:
+        return True
+    else:
+        return False
 
+def chatId(id):
+    _id = pdata.chat_id = id
+    return _id
 
 def isAdmin(username):
     '''
@@ -54,6 +62,9 @@ def isAdmin(username):
 
     return username in admin
 
+def isGuest(username):
+    _guest = temp_user
+    return username not in _guest and username not in _admin or username in temp_user
 
 def private_access():
     """
@@ -77,94 +88,101 @@ def private_access():
 @bot.message_handler(commands=['members'])
 def members(message):
     _user = message.from_user.username
-    if _user not in temp_user and _user not in _admin or _user in temp_user:
+    if isGuest(_user):
         bot.reply_to(message, text="You are not allowed to use this command.")
     else:
         if temp_user == []:
-            bot.send_message(message.chat.id, 'No registered members')
+            bot.reply_to(message, 'No registered members')
         else:
             _members = 'Registered members\n\n' + '\n'.join([member for member in temp_user])
-            bot.send_message(message.chat.id, _members)
+            bot.reply_to(message, _members)
 
 @bot.message_handler(commands=['remove'])
 def members(message):
     _user = message.from_user.username
-    if _user not in temp_user and _user not in _admin or _user in temp_user:
+    if isGuest(_user):
         bot.reply_to(message, text="You are not allowed to use this command.")
     else:
         if temp_user == []:
-            bot.send_message(message.chat.id, 'No member/s to remove')
+            bot.reply_to(message, 'No member/s to remove')
         else:
-            bot.send_message(message.chat.id, 'OK, Send me the username you want to remove')
+            bot.reply_to(message, 'OK, Send me the username you want to remove')
             bot.register_next_step_handler(message, remove_user)
 
 def remove_user(message):
     _user = message.text
     if _user in temp_user:
         temp_user.remove(_user)
-        bot.send_message(message.chat.id, 'User {} has been removed.'.format(_user))
+        bot.reply_to(message, 'User {} has been removed.'.format(_user))
     else:
-        bot.send_message(message.chat.id, 'User {} not found.'.format(_user))
+        bot.reply_to(message, 'User {} not found.'.format(_user))
 
 @bot.message_handler(commands=['add'])
 def add_user(message):
-    username = message.from_user.username
-    if username not in temp_user and username not in _admin or username in temp_user:
+    _user = message.from_user.username
+    if isGuest(_user):
         bot.reply_to(message, text="You are not allowed to use this command.")
     else:
-        bot.send_message(message.chat.id, 'Who would you like to grant privilege?')
+        bot.reply_to(message, 'Who would you like to grant privilege?')
         bot.register_next_step_handler(message, user)
         
 def user(message):
     _user = message.text
     temp_user.append(str(_user))
-    bot.send_message(message.chat.id, 'User {} added.'.format(_user))
+    bot.reply_to(message, 'User {} added.'.format(_user))
     
 @bot.message_handler(commands=['start'])
 def welcome(message):
     username = message.chat.first_name
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True, row_width = 1)
     markup.add('GET STARTED')
-    bot.send_message(message.chat.id, 'Hi, {}'.format(username), reply_markup=markup)
+    bot.reply_to(message, 'Hi, {}'.format(username), reply_markup=markup)
     bot.register_next_step_handler(message, ereg_number)
 
 @bot.message_handler(commands=['exam', 'retry'])
 @private_access()
 def ereg_number(message):
-    bot.send_message(message.chat.id, "What's your E-Registration number?")
-    bot.register_next_step_handler(message, getLastname)
+    if isOccupied():
+        bot.reply_to(message, "Bot is currently occupied.. you can try again in 2-5 minutes.")
+    else:
+        bot.reply_to(message, "What's your E-Registration number?")
+        bot.register_next_step_handler(message, getLastname)
 
 def getLastname(message):
     try:
         pdata.eNumber = int(message.text)
-        bot.send_message(message.chat.id, "What's your Last name?") 
+        bot.reply_to(message, "What's your Last name?") 
         bot.register_next_step_handler(message, getFirstname)
     except ValueError:
-        bot.send_message(message.chat.id, 'Strings are not allowed in E-Reg number. Use /retry to try again.')  
+        bot.reply_to(message, 'Strings are not allowed in E-Reg number. Use /retry to try again.')  
     except Exception as e:
         print('error', e.with_traceback)
 
 def getFirstname(message):
     pdata.lasttname=message.text
-    bot.send_message(message.chat.id, "What's your first name?") 
+    bot.reply_to(message, "What's your first name?") 
     bot.register_next_step_handler(message, run)
 
 def run(message):
     pdata.firstname=message.text
-    bot.send_message(message.chat.id, "Verifying account infromation")
-    runme()
-
+    if isOccupied():
+        bot.reply_to(message, "Bot is currently occupied.. you can try again in 2-5 minutes.")
+    else:
+        pdata.is_occupied = True
+        chatId(message.chat.id)
+        bot.reply_to(message, "Verifying account information")
+        runme()
 @bot.message_handler(commands=['faq'])
 def cmd(message):
-    bot.send_message(message.chat.id, faqs)
+    bot.reply_to(message, faqs)
 
 @bot.message_handler(commands=['cmd'])
 def cmd(message):
-    bot.send_message(message.chat.id, commands)
+    bot.reply_to(message, commands)
 
 @bot.message_handler(commands=['ping'])
 def greet(message):
-    bot.send_message(message.chat.id, "bot is working fine 😄")
+    bot.reply_to(message, "bot is working fine 😄")
     
 bot.enable_save_next_step_handlers(delay=1)
 bot.load_next_step_handlers()
