@@ -38,6 +38,10 @@ Frequently Asked Questions
 
 - Please be patient as Bot is trying It's best to pass the exam. however if you've been stuck for 5-10 minutes. You may try again or Contact the developer. 
 
+5. The bot is occupied, what do I do?
+
+- Be patient, Another user is using the bot. It will take about 2-5 Minutes.
+
 @esperanzax
 """
 
