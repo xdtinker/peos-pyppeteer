@@ -9,9 +9,10 @@ class pdata:
     eNumber = None
     lasttname = None
     firstname = None
-
+    chat_id = None
+    is_occupied = False
 def notification(msg):
-    notify = requests.get(f'https://api.telegram.org/bot{key.API_TOKEN}/sendMessage?chat_id={key.CHAT_ID}&text={msg}')
+    notify = requests.get(f'https://api.telegram.org/bot{key.API_TOKEN}/sendMessage?chat_id={pdata.chat_id}&text={msg}')
     return notify
 
 async def main():
@@ -80,6 +81,7 @@ async def main():
             _CertID = await page.evaluate("document.querySelectorAll('input')[0].getAttribute('value')")
 
             notification(f'👤 Name: {str(_Name).upper()}\n🧾 CertID: {_CertID}')
+            pdata.chat_id = None
             print('👤 Name:',str(_Name).upper())
             print('🧾 CertID:',_CertID)
 
@@ -87,6 +89,7 @@ async def main():
         notification('Something went wrong. Use /retry to try again.')
         print(e)
     finally:
+        pdata.is_occupied = False
         print('Process closed')
         await browser.close()
         
