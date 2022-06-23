@@ -37,7 +37,11 @@ Frequently Asked Questions
 
 - Please be patient as Bot is trying It's best to pass the exam. however if you've been stuck for 5-10 minutes. You may try again or Contact the developer. 
 
-5. The bot is occupied, what do I do?
+5. The bot sent me "Something went wrong. Use /retry to try again" after passing the 7th Module.
+
+- This is known issue. However if the bot has sent or notify you that Module 7 is passed, is means that it has passed the exam. 
+
+6. The bot is occupied, what do I do?
 
 - This bot is only capable of being used 1 (one) user at a time. What you can do is wait for 2-5 minutes. Don't worry It'll be quick.
 
