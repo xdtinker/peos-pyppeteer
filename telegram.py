@@ -65,9 +65,12 @@ def isAdmin(username):
 
     return username in admin
 
+
 def isGuest(username):
-    _guest = temp_user
-    return username not in _guest and username not in _admin or username in temp_user
+    if (username in _admin):
+        return False
+    elif (username not in temp_user) or (username in temp_user):
+        return True
 
 def private_access():
     """
