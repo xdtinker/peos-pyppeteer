@@ -137,7 +137,7 @@ def user(message):
     if _user in temp_user:
         bot.reply_to(message, 'User {} is existing member.'.format(_user))
     elif _user in _admin:
-        bot.reply_to(message, 'You can\'t add yourself admin :P'.format(_user))
+        bot.reply_to(message, 'You can\'t add yourself.'.format(_user))
     else:
         temp_user.append(str(_user))
         bot.reply_to(message, 'user {} is now a member.'.format(_user))
