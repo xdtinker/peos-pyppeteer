@@ -134,8 +134,13 @@ def add_user(message):
         
 def user(message):
     _user = message.text
-    temp_user.append(str(_user))
-    bot.reply_to(message, 'User {} added.'.format(_user))
+    if _user in temp_user:
+        bot.reply_to(message, 'User {} is existing member.'.format(_user))
+    elif _user in _admin:
+        bot.reply_to(message, 'You can\'t add yourself admin :P'.format(_user))
+    else:
+        temp_user.append(str(_user))
+        bot.reply_to(message, 'user {} is now a member.'.format(_user))
     
 @bot.message_handler(commands=['start'])
 def welcome(message):
