@@ -39,7 +39,7 @@ Frequently Asked Questions
 
 5. The bot is occupied, what do I do?
 
-- Be patient, Another user is using the bot. It will take about 2-5 Minutes.
+- This bot is only capable of being used 1 (one) user at a time. What you can do is wait for 2-5 minutes. Don't worry It'll be quick.
 
 @esperanzax
 """
@@ -137,7 +137,7 @@ def user(message):
     if _user in temp_user:
         bot.reply_to(message, 'User {} is existing member.'.format(_user))
     elif _user in _admin:
-        bot.reply_to(message, 'You can\'t add yourself.'.format(_user))
+        bot.reply_to(message, 'You can\'t add yourself admin :P'.format(_user))
     else:
         temp_user.append(str(_user))
         bot.reply_to(message, 'user {} is now a member.'.format(_user))
