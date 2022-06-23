@@ -64,9 +64,9 @@ async def main():
                         retry += 1
                         print(f'> Module {moduleNum} Status: X FAILED')
                         if retry == 3:
-                            notification('Exam is taking longer than expected. Please be patient.')
+                            notification(f'ℹ Module {moduleNum} is taking longer than expected. Please be patient.')
                         elif retry == 5:
-                            notification('Almost done...')
+                            notification('⏳ Almost done...')
                     else:
                         retry = 0 
                         print(f'> Module {moduleNum} Status: ✓ PASSED')
