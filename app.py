@@ -15,8 +15,8 @@ class pdata:
     
 def notification(msg):
     notify = requests.get(f'https://api.telegram.org/bot{key.API_TOKEN}/sendMessage?chat_id={pdata.chat_id}&text={msg}')
-    x = json.loads(notify.text)
-    pdata.msg_id = list(x.values())[1]['message_id']
+#     x = json.loads(notify.text)
+#     pdata.msg_id = list(x.values())[1]['message_id']
     return notify
 
 def update(msg):
