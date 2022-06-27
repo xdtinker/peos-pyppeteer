@@ -56,7 +56,9 @@ async def main():
             retry = 0
             while True:
                 try:   
-                    if moduleNum >= 7: break
+                    if moduleNum >= 7: 
+                        update(f'ℹ You have passed the examination.\n\nSign in with your PEOS account in [ peos.dmw.gov.ph ] to view and download your certificate')
+                        break
                     moduleNum +=1
                     update(f'ℹ Module {moduleNum} Status: ⌛ PENDING')
                     await page.click(f'a[href="{moduleNum}"]')
@@ -72,7 +74,7 @@ async def main():
                     if(await page.xpath('//a[contains(text(), "Let\'s review again!")]')):
                         moduleNum-=1
                         retry += 1
-                        print(f'> Module {moduleNum} Status: X FAILED')
+                        update(f'> Module {moduleNum} Status: X FAILED, Retrying')
                         if retry == 3:
                             update(f'ℹ Module {moduleNum} is taking longer than expected. Please be patient.')
                         elif retry == 5:
