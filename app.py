@@ -47,9 +47,9 @@ async def main():
             notification('⚠ Account not found! Use /retry to try again.')
             await browser.close()
         else:
-            notification('✅ Account Verified!')
+            update('✅ Account Verified!')
             await page.waitFor(1000)
-            notification('🧾 Exam in progress!')
+            update('🧾 Exam in progress!')
 
             moduleNum = 0
             retry = 0
