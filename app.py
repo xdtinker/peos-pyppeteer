@@ -15,8 +15,8 @@ class pdata:
     
 def notification(msg):
     notify = requests.get(f'https://api.telegram.org/bot{key.API_TOKEN}/sendMessage?chat_id={pdata.chat_id}&text={msg}')
-#     x = json.loads(notify.text)
-#     pdata.msg_id = list(x.values())[1]['message_id']
+    x = json.loads(notify.text)
+    pdata.msg_id = list(x.values())[1]['message_id']
     return notify
 
 def update(msg):
@@ -32,7 +32,7 @@ async def main():
 
     try:
         await page.goto(key.SITE)
-
+        notification('🧾 Verifying account information.')
         await page.type('#eregid', str(pdata().eNumber))
         await page.type('#lname', pdata().lasttname)
         await page.type('#fname',  pdata().firstname)
@@ -44,7 +44,7 @@ async def main():
         await page.waitFor(1500)
         current_url = page.url
         if(current_url != key.SITE + 'hhw.php'):
-            notification('⚠ Account not found! Use /retry to try again.')
+            update('⚠ Account not found! Use /retry to try again.')
             await browser.close()
         else:
             update('✅ Account Verified!')
