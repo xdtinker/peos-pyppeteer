@@ -50,7 +50,6 @@ async def main():
             notification('✅ Account Verified!')
             await page.waitFor(1000)
             notification('🧾 Exam in progress!')
-            notification('🧾 please wait..')
 
             moduleNum = 0
             retry = 0
@@ -74,7 +73,7 @@ async def main():
                     if(await page.xpath('//a[contains(text(), "Let\'s review again!")]')):
                         moduleNum-=1
                         retry += 1
-                        update(f'> Module {moduleNum} Status: X FAILED, Retrying')
+                        print(f'> Module {moduleNum} Status: X FAILED, Retrying')
                         if retry == 3:
                             update(f'ℹ Module {moduleNum} is taking longer than expected. Please be patient.')
                         elif retry == 5:
