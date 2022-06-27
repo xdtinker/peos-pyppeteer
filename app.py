@@ -4,16 +4,23 @@ import constants as key
 from pyppeteer import launch
 import requests
 
-
 class pdata:
+    msg_id = None
+    chat_id = None
     eNumber = None
     lasttname = None
     firstname = None
-    chat_id = None
     is_occupied = False
+    
 def notification(msg):
     notify = requests.get(f'https://api.telegram.org/bot{key.API_TOKEN}/sendMessage?chat_id={pdata.chat_id}&text={msg}')
+    x = json.loads(notify.text)
+    pdata.msg_id = list(x.values())[1]['message_id']
     return notify
+
+def update(msg):
+    update = requests.get(f'https://api.telegram.org/bot{key.API_TOKEN}/editMessageText?chat_id={pdata.chat_id}&message_id={pdata.msg_id}&text={msg}')
+    return update
 
 async def main():
     browser = await launch(headless=True, args=['--ignore-certificate-errors', '--no-sandbox'], 
@@ -42,13 +49,15 @@ async def main():
             notification('✅ Account Verified!')
             await page.waitFor(1000)
             notification('🧾 Exam in progress!')
+            notification('🧾 please wait..')
 
             moduleNum = 0
             retry = 0
             while True:
-                try:
+                try:   
                     if moduleNum >= 7: break
                     moduleNum +=1
+                    update(f'ℹ Module {moduleNum} Status: ⌛ PENDING')
                     await page.click(f'a[href="{moduleNum}"]')
                     await page.waitFor(1000)
                     await page.click('.getQuestionsHHW')
@@ -64,13 +73,13 @@ async def main():
                         retry += 1
                         print(f'> Module {moduleNum} Status: X FAILED')
                         if retry == 3:
-                            notification(f'ℹ Module {moduleNum + 1} is taking longer than expected. Please be patient.')
+                            update(f'ℹ Module {moduleNum} is taking longer than expected. Please be patient.')
                         elif retry == 5:
-                            notification('⏳ Almost done...')
+                            update('⏳ Almost done...')
                     else:
                         retry = 0 
                         print(f'> Module {moduleNum} Status: ✓ PASSED')
-                        notification(f'🔰 Module {moduleNum} Status: ✓ PASSED')
+                        update(f'🔰 Module {moduleNum} Status: ✓ PASSED')
                 except:
                     moduleNum-=1
                     
