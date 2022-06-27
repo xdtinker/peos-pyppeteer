@@ -185,9 +185,9 @@ def run(message):
     else:
         pdata.is_occupied = True
         userID = message.chat.id
-        pdata.msg_id = message.id
         chatId(userID)
         bot.send_message(userID, "Verifying account information")
+        pdata.msg_id = message.id
         runme()
 @bot.message_handler(commands=['faq'])
 def cmd(message):
