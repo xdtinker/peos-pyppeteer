@@ -34,7 +34,7 @@ async def main():
     page = await browser.newPage()
 
     try:
-        await page.goto(key.SITE)
+        await page.goto(SITE)
         notification('🧾 Verifying account information.')
         await page.type('#eregid', str(pdata().eNumber))
         await page.type('#lname', pdata().lasttname)
