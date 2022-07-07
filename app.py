@@ -1,9 +1,12 @@
 import asyncio
 import random
-import constants as key
+import os
 import json
 import requests
 from pyppeteer import launch
+
+API_TOKEN = os.environ['API_KEY']
+SITE = os.environ['SITE']
 
 class pdata:
     msg_id = None
@@ -14,13 +17,13 @@ class pdata:
     is_occupied = False
     
 def notification(msg):
-    notify = requests.get(f'https://api.telegram.org/bot{key.API_TOKEN}/sendMessage?chat_id={pdata.chat_id}&text={msg}')
+    notify = requests.get(f'https://api.telegram.org/bot{API_TOKEN}/sendMessage?chat_id={pdata.chat_id}&text={msg}')
     x = json.loads(notify.text)
     pdata.msg_id = list(x.values())[1]['message_id']
     return notify
 
 def update(msg):
-    update = requests.get(f'https://api.telegram.org/bot{key.API_TOKEN}/editMessageText?chat_id={pdata.chat_id}&message_id={pdata.msg_id}&text={msg}')
+    update = requests.get(f'https://api.telegram.org/bot{API_TOKEN}/editMessageText?chat_id={pdata.chat_id}&message_id={pdata.msg_id}&text={msg}')
     return update
 
 async def main():
@@ -43,7 +46,7 @@ async def main():
 
         await page.waitFor(1500)
         current_url = page.url
-        if(current_url != key.SITE + 'hhw.php'):
+        if(current_url != SITE + 'hhw.php'):
             update('⚠ Account not found! Use /retry to try again.')
             await browser.close()
         else:
