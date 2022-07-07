@@ -48,7 +48,7 @@ Frequently Asked Questions
 @esperanzax
 """
 
-temp_user = []
+temp_user = ['Pazilav']
 _admin = ['esperanzax']
 
 def isOccupied():
